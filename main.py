@@ -9,14 +9,16 @@
 import tkinter as tk
 
 
-class Application(tk.Frame):
+class ImageEditorApp():
     
-    def __init__(self, master):
-        super().__init__(master)
-        master.title('HIT137 Assignment 3 - Image Editor')
+    def __init__(self, root):
+        self.root = root
+        self.root.title('HIT137 Assignment 3 - Image Editor')
+        self.root.geometry('1200x800')
+
 
 
 root = tk.Tk()
-app = Application(master=root)
-app.mainloop()
+app = ImageEditorApp(root)
+root.mainloop()
 
