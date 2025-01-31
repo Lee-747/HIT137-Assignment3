@@ -6,7 +6,7 @@
 
 
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 import os.path
 import cv2
 
@@ -31,7 +31,7 @@ class ImageEditorApp():
 
     def _setup_inputs(self, main_container):
         self.input_frame = tk.Frame(main_container)
-        self.input_frame.pack(side=tk.TOP, fill=tk.X, padx=10, pady=10)
+        self.input_frame.pack(side=tk.TOP, fill=tk.X)
 
         self.open_file_button = tk.Button(self.input_frame, text="Open file", command=self._click_open_image)
         self.open_file_button.pack(side=tk.LEFT)
@@ -39,10 +39,13 @@ class ImageEditorApp():
 
     def _setup_image_containers(self, main_container: tk.Frame):
 
-        self.left_image = ImageContainer(main_container)
+        self.left_image = ImageContainer(main_container, self.set_have_selection)
         self.left_image.pack(side=tk.LEFT)
 
-        self.right_image = ImageContainer(main_container)
+        self.crop_button = tk.Button(main_container, text="Crop\nSelected\nArea", command=self.click_crop, state="disabled")
+        self.crop_button.pack(side=tk.LEFT)
+
+        self.right_image = ImageContainer(main_container, None)
         self.right_image.pack(side=tk.RIGHT)
 
     def _click_open_image(self):
@@ -61,6 +64,20 @@ class ImageEditorApp():
             error_message_template = "Exception of type {0} raised. {1!r}"
             message = error_message_template.format(type(ex).__name__, ex.args)
             print(message)
+
+    def set_have_selection(self, have_selection):
+        if not have_selection:
+            self.crop_button["state"] = "disabled"
+        else:
+            self.crop_button["state"] = "active"
+
+    def click_crop(self):
+        cropped_img = self.left_image.get_selection()
+        if len(cropped_img) == 0:
+            return
+        
+        self.right_image.load_image(cropped_img)
+
 
 
 if __name__ == "__main__":
