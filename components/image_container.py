@@ -25,15 +25,16 @@ class ImageContainer(tk.Frame):
         height, width, depth = image.shape
         self.canvas.config(width=width, height=height)
         self.canvas.create_image(0, 0, image=self.image, anchor=tk.NW)
+        self.canvas.update()
 
     def on_mouse_button_down(self, event):
         self.mouse_button_down = True
         self.mouse_selection_start = [event.x, event.y]
 
     def on_mouse_move(self, event):
-        self.mouseX = event.x
-        self.mouseY = event.y
-        # print(f'X:{self.mouseX} Y:{self.mouseY}')
+        # draw vertical and horizontal selection lines
+        self.canvas.create_line(event.x, 0, event.x, self.winfo_height())
+        self.canvas.create_line(0, event.y, self.winfo_width(), event.y)
 
     def on_mouse_button_up(self, event):
         self.mouse_button_down = False
