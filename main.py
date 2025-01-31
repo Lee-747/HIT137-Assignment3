@@ -9,7 +9,7 @@ import tkinter as tk
 from tkinter import filedialog
 import os.path
 import cv2
-import PIL.Image, PIL.ImageTk
+
 
 from components.image_container import ImageContainer
 
@@ -51,13 +51,16 @@ class ImageEditorApp():
             if not os.path.isfile(file_path):
                 return
             
-            self.input_image = cv2.imread(file_path)
+            self.input_image = cv2.cvtColor(cv2.imread(file_path), cv2.COLOR_BGR2RGB)
 
-            # convert to photo image
-            converted_image = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(self.input_image))
-            self.left_image.load_image(converted_image)
-        except:
+            # load image onto container
+            self.left_image.load_image(self.input_image)
+        
+        except Exception as ex:
             print(f"Error attempting to open input file from {file_path}")
+            error_message_template = "Exception of type {0} raised. {1!r}"
+            message = error_message_template.format(type(ex).__name__, ex.args)
+            print(message)
 
 
 if __name__ == "__main__":
