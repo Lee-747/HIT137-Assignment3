@@ -2,9 +2,11 @@ import tkinter as tk
 from PIL import Image, ImageTk
 
 class ImageContainer(tk.Frame):
-    def __init__(self, parent: tk.Frame, set_have_selection):
+    def __init__(self, parent: tk.Frame, set_have_selection, is_input=False):
         super(ImageContainer, self).__init__()
         self.parent=parent
+        self.set_have_selection = set_have_selection
+        self.is_input = is_input
         self.canvas = tk.Canvas(
             self,
             width=500,
@@ -12,14 +14,16 @@ class ImageContainer(tk.Frame):
             bg="#FFF"
         )
         self.canvas.pack(side=tk.LEFT, padx=5, pady=5)
-        self.set_have_selection = set_have_selection
         self.image_loaded = False
         self.selection_box = None
         self.have_selection = False
         self.mouse_selection_start = [0, 0] # [x , y]
         self.mouse_selection_end = [0, 0]   # [x , y]
-        self.canvas.bind("<B1-Motion>", self.on_mouse_move) 
-        self.canvas.bind("<ButtonPress-1>", self.on_mouse_button_down)
+
+        # if this is the input canvas, set the selection box events
+        if self.is_input:
+            self.canvas.bind("<B1-Motion>", self.on_mouse_move) 
+            self.canvas.bind("<ButtonPress-1>", self.on_mouse_button_down)
 
     def load_image(self, image):
         # convert to photo image    

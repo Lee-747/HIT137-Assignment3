@@ -7,6 +7,7 @@
 
 import tkinter as tk
 from tkinter import filedialog, messagebox
+from tkinter import ttk
 import os.path
 import cv2
 
@@ -36,16 +37,20 @@ class ImageEditorApp():
         self.open_file_button = tk.Button(self.input_frame, text="Open file", command=self._click_open_image)
         self.open_file_button.pack(side=tk.LEFT)
 
+        self.crop_button = tk.Button(self.input_frame, text="Crop\nSelected\nArea", command=self.click_crop, state="disabled")
+        self.crop_button.pack(side=tk.LEFT)
+
+        self.scale = ttk.Scale(self.input_frame, from_=200, to=0, orient=tk.HORIZONTAL)
+        self.scale.pack(side=tk.RIGHT)
+        self.scale.set(100)
 
     def _setup_image_containers(self, main_container: tk.Frame):
 
-        self.left_image = ImageContainer(main_container, self.set_have_selection)
+        self.left_image = ImageContainer(main_container, self.set_have_selection, is_input=True)
         self.left_image.pack(side=tk.LEFT)
 
-        self.crop_button = tk.Button(main_container, text="Crop\nSelected\nArea", command=self.click_crop, state="disabled")
-        self.crop_button.pack(side=tk.LEFT)
 
-        self.right_image = ImageContainer(main_container, None)
+        self.right_image = ImageContainer(main_container, None, is_input=False)
         self.right_image.pack(side=tk.RIGHT)
 
     def _click_open_image(self):
@@ -58,6 +63,9 @@ class ImageEditorApp():
 
             # load image onto container
             self.left_image.load_image(self.input_image)
+
+            #TODO set right image to same size
+            
         
         except Exception as ex:
             print(f"Error attempting to open input file from {file_path}")
