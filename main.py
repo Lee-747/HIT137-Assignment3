@@ -13,6 +13,7 @@ import cv2
 
 
 from components.image_container import ImageContainer
+from components.image_resizer_saver import ImageResizer, ImageSaver
 
 class ImageEditorApp():
     
@@ -85,6 +86,20 @@ class ImageEditorApp():
             return
         
         self.right_image.load_image(cropped_img)
+
+    def _setup_gui(self):
+        main_container = tk.Frame(self.root)
+        main_container.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+    # Create top frame for buttons
+        top_frame = tk.Frame(main_container)
+        top_frame.pack(side=tk.TOP, fill=tk.X)
+
+        self._setup_inputs(top_frame)  # Pass top_frame instead of main_container
+        self._setup_image_containers(main_container)
+
+    # Add Image Saver to the top frame
+        self.saver = ImageSaver(self.root, self.right_image, top_frame)
 
 
 
